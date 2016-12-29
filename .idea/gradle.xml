@@ -3,12 +3,25 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="createEmptyContentRootDirectories" value="true" />
+        <option name="distributionType" value="LOCAL" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/addressbook" />
+        <option name="gradleHome" value="$USER_HOME$/gradle-3.2" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/addressbook" />
+          </set>
+        </option>
+        <option name="useAutoImport" value="true" />
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/sandbox" />
         <option name="gradleHome" value="$USER_HOME$/gradle-3.2" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$/sandbox" />
+            <option value="$PROJECT_DIR$/sandbox/adressbook" />
           </set>
         </option>
         <option name="useAutoImport" value="true" />
