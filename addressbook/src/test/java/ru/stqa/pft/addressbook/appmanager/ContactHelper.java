@@ -6,7 +6,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class ContactHelper {
     public void submitCreationContact() {
-        $("input[type='submit']").click();
+        $("input[name='submit']").click();
     }
 
     public void fillContactForm(ContactData contactData) {
@@ -19,5 +19,21 @@ public class ContactHelper {
 
     public void initContactPage() {
         $("a[href='edit.php']").click();
+    }
+
+    public void initModificationContact() {
+        $("a[href*='edit.php?']").click();
+    }
+
+    public void updateContact() {
+        $("input[name='update']").click();
+    }
+
+    public void deleteSelectedContacts() {
+        $("input[value='Delete']").click();
+    }
+
+    public void selectedContact() {
+        $("input[name='selected[]']").click();
     }
 }

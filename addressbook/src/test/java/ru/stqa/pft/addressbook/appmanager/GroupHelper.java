@@ -18,4 +18,20 @@ public class GroupHelper {
         $("textarea[name='group_header']").setValue(groupData.getGroupHeader());
         $("textarea[name='group_footer']").setValue(groupData.getGroupFooter());
     }
+
+    public void selectedGroup() {
+        $("input[name='selected[]']").click();
+    }
+
+    public void deleteSelectedGroups() {
+        $("input[name='delete']").click();
+    }
+
+    public void editGroup() {
+        $("input[name='edit']").click();
+    }
+
+    public void updateGroup() {
+        $("input[name='update']").click();
+    }
 }
