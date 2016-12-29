@@ -15,10 +15,11 @@ public class GroupCreationTests {
 
     @Test
     public void testGroupCreation(){
-        initGropPage();
+        initGroupPage();
         initGroupCreation();
         fillGroupForm(new GroupData("test1", "test2", "test3"));
         submitGroupCreation();
+        initGroupPage();
     }
 
     private void login(String login, String password) {
@@ -35,7 +36,7 @@ public class GroupCreationTests {
         $("input[name='new']").click();
     }
 
-    private void initGropPage() {
+    private void initGroupPage() {
         $("a[href='group.php']").click();
     }
 
