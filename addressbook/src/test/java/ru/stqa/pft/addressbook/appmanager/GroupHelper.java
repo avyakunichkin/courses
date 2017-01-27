@@ -4,7 +4,7 @@ import ru.stqa.pft.addressbook.model.GroupData;
 
 import static com.codeborne.selenide.Selenide.$;
 
-public class GroupHelper {
+public class GroupHelper extends BaseHelper{
     public void submitGroupCreation() {
         $("input[name='submit']").click();
     }
@@ -14,9 +14,9 @@ public class GroupHelper {
     }
 
     public void fillGroupForm(GroupData groupData) {
-        $("input[name='group_name']").setValue(groupData.getGroupName());
-        $("textarea[name='group_header']").setValue(groupData.getGroupHeader());
-        $("textarea[name='group_footer']").setValue(groupData.getGroupFooter());
+        fill("input[name='group_name']", groupData.getGroupName());
+        fill("textarea[name='group_header']", groupData.getGroupHeader());
+        fill("textarea[name='group_footer']", groupData.getGroupFooter());
     }
 
     public void selectedGroup() {

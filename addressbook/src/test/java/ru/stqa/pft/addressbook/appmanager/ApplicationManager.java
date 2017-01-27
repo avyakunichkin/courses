@@ -19,12 +19,7 @@ public class ApplicationManager {
     }
 
     public void init() {
-        // Для примера использования if else, а вообще я бы написал Configuration.browser = browser;
-        if(browser.equals("chrome")){
-            Configuration.browser = "chrome";
-        } else if (browser.equals("firefox")) {
-            Configuration.browser = "firefox";
-        }
+        Configuration.browser = browser;
         open("http://127.0.0.1:8080/addressbook/");
         sessionHelper.login("admin", "secret");
     }

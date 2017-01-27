@@ -5,10 +5,18 @@ import static com.codeborne.selenide.Selenide.switchTo;
 
 public class NavigationHelper {
     public void openGroupPage() {
+        if($("h1").exists()
+                && $("h1").getText().equals("Groups")
+                && $("input[name='new']").exists()){
+            return;
+        }
         $("a[href='group.php']").click();
     }
 
     public void openHomePage() {
+        if($("#maintable").exists()){
+            return;
+        }
         $("a[href='./']").click();
     }
 
