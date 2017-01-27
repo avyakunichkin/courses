@@ -2,6 +2,7 @@ package ru.stqa.pft.addressbook.appmanager;
 
 import ru.stqa.pft.addressbook.model.GroupData;
 
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 
 public class GroupHelper extends BaseHelper{
@@ -33,5 +34,20 @@ public class GroupHelper extends BaseHelper{
 
     public void updateGroup() {
         $("input[name='update']").click();
+    }
+
+    public void createGroup(GroupData groupData) {
+        initGroupCreation();
+        fillGroupForm(groupData);
+        submitGroupCreation();
+        returnToGroupPage();
+    }
+
+    private void returnToGroupPage() {
+        $(byText("group page")).click();
+    }
+
+    public boolean isThereAGroup() {
+        return $("input[name='selected[]']").isDisplayed();
     }
 }
