@@ -1,7 +1,11 @@
 package ru.stqa.pft.addressbook.appmanager;
 
+import com.codeborne.selenide.SelenideElement;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selectors.byText;
@@ -29,26 +33,6 @@ public class ContactHelper extends BaseHelper{
         }
     }
 
-    public void initContactPage() {
-        $("a[href='edit.php']").click();
-    }
-
-    public void initModificationContact() {
-        $("a[href*='edit.php?']").click();
-    }
-
-    public void updateContact() {
-        $("input[name='update']").click();
-    }
-
-    public void deleteSelectedContacts() {
-        $("input[value='Delete']").click();
-    }
-
-    public void selectedContact() {
-        $("input[name='selected[]']").click();
-    }
-
     public void createContact(ContactData contactData) {
         initContactPage();
         fillContactForm(contactData, true);
@@ -56,10 +40,37 @@ public class ContactHelper extends BaseHelper{
         returnToHomePage();
     }
 
+    public List<ContactData> getContactList(){
+        List<ContactData> contacts = new ArrayList<>();
+        List<SelenideElement> elements = $$("tr[name='entry']");
+        for(SelenideElement element : elements){
+            int id = Integer.parseInt(element.$("input").getValue());
+            String firstName = element.$("td:nth-of-type(3)").getText();
+            String lastName = element.$("td:nth-of-type(2)").getText();
+            ContactData contact = new ContactData(id, firstName, lastName, null, null, null);
+            contacts.add(contact);
+        }
+        return contacts;
+    }
+
+    public void initContactPage() {
+        $("a[href='edit.php']").click();
+    }
+    public void initModificationContact(int index) {
+        $$("a[href*='edit.php?']").get(index).click();
+    }
+    public void updateContact() {
+        $("input[name='update']").click();
+    }
+    public void deleteSelectedContacts() {
+        $("input[value='Delete']").click();
+    }
+    public void selectedContact(int index) {
+        $$("input[name='selected[]']").get(index).click();
+    }
     public boolean isThereAContact() {
         return $("input[name='selected[]']").isDisplayed();
     }
-
     public void returnToHomePage() {
         $(byText("home page")).click();
     }
