@@ -2,8 +2,8 @@ package ru.stqa.pft.addressbook.appmanager;
 
 import com.codeborne.selenide.SelenideElement;
 import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.model.Groups;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.codeborne.selenide.Selectors.byText;
@@ -11,6 +11,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class GroupHelper extends BaseHelper{
+
     public void submitGroupCreation() {
         $("input[name='submit']").click();
     }
@@ -25,10 +26,6 @@ public class GroupHelper extends BaseHelper{
         fill("textarea[name='group_footer']", groupData.getGroupFooter());
     }
 
-    public void selectedGroup(int index) {
-        $$("input[name='selected[]']").get(index).click();
-    }
-
     public void deleteSelectedGroups() {
         $("input[name='delete']").click();
     }
@@ -41,28 +38,42 @@ public class GroupHelper extends BaseHelper{
         $("input[name='update']").click();
     }
 
-    public void createGroup(GroupData groupData) {
+    public void create(GroupData groupData) {
         initGroupCreation();
         fillGroupForm(groupData);
         submitGroupCreation();
         returnToGroupPage();
     }
 
+    public void modify(GroupData group) {
+        selectedGroupById(group.getId());
+        editGroup();
+        fillGroupForm(group);
+        updateGroup();
+        returnToGroupPage();
+    }
+
+    public void delete(GroupData group) {
+        selectedGroupById(group.getId());
+        deleteSelectedGroups();
+        returnToGroupPage();
+    }
+
+    private void selectedGroupById(int id) {
+        $("input[value='" + id + "']").click();
+    }
+
     public void returnToGroupPage() {
         $(byText("group page")).click();
     }
 
-    public boolean isThereAGroup() {
-        return $("input[name='selected[]']").isDisplayed();
-    }
-
-    public List<GroupData> getGroupList() {
-        List<GroupData> groups = new ArrayList<>();
+    public Groups all() {
+        Groups groups = new Groups();
         List<SelenideElement> elements = $$("span.group");
         for(SelenideElement element : elements){
             String name = element.getText();
             int id = Integer.parseInt(element.$("input").getValue());
-            GroupData group = new GroupData(id, name, null, null);
+            GroupData group = new GroupData().withId(id).withName(name);
             groups.add(group);
         }
         return groups;

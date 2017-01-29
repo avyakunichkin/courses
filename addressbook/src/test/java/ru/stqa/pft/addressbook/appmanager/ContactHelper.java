@@ -3,6 +3,7 @@ package ru.stqa.pft.addressbook.appmanager;
 import com.codeborne.selenide.SelenideElement;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
+import ru.stqa.pft.addressbook.model.Contacts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,21 +34,29 @@ public class ContactHelper extends BaseHelper{
         }
     }
 
-    public void createContact(ContactData contactData) {
+    public void create(ContactData contactData) {
         initContactPage();
         fillContactForm(contactData, true);
         submitCreationContact();
         returnToHomePage();
     }
 
-    public List<ContactData> getContactList(){
+    public void modify(ContactData contact) {
+        initModificationContactById(contact.getId());
+        fillContactForm(contact, false);
+        updateContact();
+        returnToHomePage();
+    }
+
+    public List<ContactData> list(){
         List<ContactData> contacts = new ArrayList<>();
         List<SelenideElement> elements = $$("tr[name='entry']");
         for(SelenideElement element : elements){
             int id = Integer.parseInt(element.$("input").getValue());
             String firstName = element.$("td:nth-of-type(3)").getText();
             String lastName = element.$("td:nth-of-type(2)").getText();
-            ContactData contact = new ContactData(id, firstName, lastName, null, null, null);
+            ContactData contact = new ContactData()
+                    .withId(id).withFirstName(firstName).withLastName(lastName);
             contacts.add(contact);
         }
         return contacts;
@@ -56,22 +65,37 @@ public class ContactHelper extends BaseHelper{
     public void initContactPage() {
         $("a[href='edit.php']").click();
     }
-    public void initModificationContact(int index) {
-        $$("a[href*='edit.php?']").get(index).click();
+    public void initModificationContactById(int id) {
+        $("a[href='edit.php?id=" + id + "']").click();
     }
     public void updateContact() {
         $("input[name='update']").click();
     }
-    public void deleteSelectedContacts() {
+    public void delete() {
         $("input[value='Delete']").click();
-    }
-    public void selectedContact(int index) {
-        $$("input[name='selected[]']").get(index).click();
     }
     public boolean isThereAContact() {
         return $("input[name='selected[]']").isDisplayed();
     }
     public void returnToHomePage() {
         $(byText("home page")).click();
+    }
+
+    public Contacts all() {
+        Contacts contacts = new Contacts();
+        List<SelenideElement> elements = $$("tr[name='entry']");
+        for(SelenideElement element : elements){
+            int id = Integer.parseInt(element.$("input").getValue());
+            String firstName = element.$("td:nth-of-type(3)").getText();
+            String lastName = element.$("td:nth-of-type(2)").getText();
+            ContactData contact = new ContactData()
+                    .withId(id).withFirstName(firstName).withLastName(lastName);
+            contacts.add(contact);
+        }
+        return contacts;
+    }
+
+    public void selectedById(int id) {
+        $("tr[name='entry'] input[value='" + id + "']").click();
     }
 }
