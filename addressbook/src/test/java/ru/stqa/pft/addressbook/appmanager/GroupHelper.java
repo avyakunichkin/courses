@@ -6,35 +6,38 @@ import ru.stqa.pft.addressbook.model.Groups;
 
 import java.util.List;
 
+import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class GroupHelper extends BaseHelper{
 
-    public void submitGroupCreation() {
+    private Groups groupCache = null;
+
+    private void submitGroupCreation() {
         $("input[name='submit']").click();
     }
 
-    public void initGroupCreation() {
+    private void initGroupCreation() {
         $("input[name='new']").click();
     }
 
-    public void fillGroupForm(GroupData groupData) {
+    private void fillGroupForm(GroupData groupData) {
         fill("input[name='group_name']", groupData.getGroupName());
         fill("textarea[name='group_header']", groupData.getGroupHeader());
         fill("textarea[name='group_footer']", groupData.getGroupFooter());
     }
 
-    public void deleteSelectedGroups() {
+    private void deleteSelectedGroups() {
         $("input[name='delete']").click();
     }
 
-    public void editGroup() {
+    private void editGroup() {
         $("input[name='edit']").click();
     }
 
-    public void updateGroup() {
+    private void updateGroup() {
         $("input[name='update']").click();
     }
 
@@ -42,6 +45,7 @@ public class GroupHelper extends BaseHelper{
         initGroupCreation();
         fillGroupForm(groupData);
         submitGroupCreation();
+        groupCache = null;
         returnToGroupPage();
     }
 
@@ -50,32 +54,41 @@ public class GroupHelper extends BaseHelper{
         editGroup();
         fillGroupForm(group);
         updateGroup();
+        groupCache = null;
         returnToGroupPage();
     }
 
     public void delete(GroupData group) {
         selectedGroupById(group.getId());
         deleteSelectedGroups();
+        groupCache = null;
         returnToGroupPage();
+    }
+
+    public int count(){
+        return $$(byName("selected[]")).size();
     }
 
     private void selectedGroupById(int id) {
         $("input[value='" + id + "']").click();
     }
 
-    public void returnToGroupPage() {
+    private void returnToGroupPage() {
         $(byText("group page")).click();
     }
 
     public Groups all() {
-        Groups groups = new Groups();
+        if (groupCache != null){
+            return new Groups(groupCache);
+        }
+        groupCache = new Groups();
         List<SelenideElement> elements = $$("span.group");
         for(SelenideElement element : elements){
             String name = element.getText();
             int id = Integer.parseInt(element.$("input").getValue());
             GroupData group = new GroupData().withId(id).withName(name);
-            groups.add(group);
+            groupCache.add(group);
         }
-        return groups;
+        return new Groups(groupCache);
     }
 }

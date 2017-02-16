@@ -20,7 +20,8 @@ public class NavigationHelper {
         $("a[href='./']").click();
     }
 
-    public void acceptAlert() {
+    public NavigationHelper acceptAlert() {
         switchTo().alert().accept();
+        return this;
     }
 }

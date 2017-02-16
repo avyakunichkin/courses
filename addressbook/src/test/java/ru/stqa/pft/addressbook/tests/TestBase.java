@@ -6,7 +6,7 @@ import ru.stqa.pft.addressbook.appmanager.ApplicationManager;
 
 public class TestBase {
 
-    protected static final ApplicationManager app = new ApplicationManager("firefox");
+    protected static final ApplicationManager app = new ApplicationManager("chrome");
 
     @BeforeSuite
     public void setUp(){

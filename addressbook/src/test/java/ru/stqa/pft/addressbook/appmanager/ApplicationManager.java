@@ -7,7 +7,7 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class ApplicationManager {
 
-    String browser = "";
+    private String browser = "";
 
     private ContactHelper contactHelper = new ContactHelper();
     private GroupHelper groupHelper = new GroupHelper();
@@ -20,7 +20,7 @@ public class ApplicationManager {
 
     public void init() {
         Configuration.browser = browser;
-        open("http://127.0.0.1:8080/addressbook/");
+        open("http://localhost:8080/addressbook/");
         sessionHelper.login("admin", "secret");
     }
 

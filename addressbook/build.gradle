@@ -7,5 +7,5 @@ repositories {
 dependencies {
     compile 'org.testng:testng:6.10'
     compile 'org.hamcrest:java-hamcrest:2.0.0.0'
-    testCompile 'com.codeborne:selenide:4.2'
+    testCompile 'com.codeborne:selenide:4.3'
 }

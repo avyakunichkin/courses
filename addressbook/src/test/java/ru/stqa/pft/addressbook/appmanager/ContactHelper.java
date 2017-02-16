@@ -14,11 +14,14 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class ContactHelper extends BaseHelper{
-    public void submitCreationContact() {
+
+    private Contacts contactsCache = null;
+
+    private void submitCreationContact() {
         $("input[name='submit']").click();
     }
 
-    public void fillContactForm(ContactData contactData, boolean creation) {
+    private void fillContactForm(ContactData contactData, boolean creation) {
         fill("input[name='firstname']", contactData.getFirstName());
         fill("input[name='lastname']", contactData.getLastName());
         fill("textarea[name='address']", contactData.getAddress());
@@ -38,6 +41,7 @@ public class ContactHelper extends BaseHelper{
         initContactPage();
         fillContactForm(contactData, true);
         submitCreationContact();
+        contactsCache = null;
         returnToHomePage();
     }
 
@@ -45,6 +49,7 @@ public class ContactHelper extends BaseHelper{
         initModificationContactById(contact.getId());
         fillContactForm(contact, false);
         updateContact();
+        contactsCache = null;
         returnToHomePage();
     }
 
@@ -62,27 +67,36 @@ public class ContactHelper extends BaseHelper{
         return contacts;
     }
 
-    public void initContactPage() {
+    private void initContactPage() {
         $("a[href='edit.php']").click();
     }
-    public void initModificationContactById(int id) {
+    private void initModificationContactById(int id) {
         $("a[href='edit.php?id=" + id + "']").click();
     }
-    public void updateContact() {
+    private void updateContact() {
         $("input[name='update']").click();
     }
-    public void delete() {
+    public void delete(int id) {
+        $("tr[name='entry'] input[value='" + id + "']").click();
         $("input[value='Delete']").click();
+        contactsCache = null;
     }
     public boolean isThereAContact() {
         return $("input[name='selected[]']").isDisplayed();
     }
-    public void returnToHomePage() {
+    private void returnToHomePage() {
         $(byText("home page")).click();
     }
 
+    public int count(){
+        return $$(byName("selected[]")).size();
+    }
+
     public Contacts all() {
-        Contacts contacts = new Contacts();
+        if (contactsCache != null){
+            return new Contacts(contactsCache);
+        }
+        contactsCache = new Contacts();
         List<SelenideElement> elements = $$("tr[name='entry']");
         for(SelenideElement element : elements){
             int id = Integer.parseInt(element.$("input").getValue());
@@ -90,12 +104,8 @@ public class ContactHelper extends BaseHelper{
             String lastName = element.$("td:nth-of-type(2)").getText();
             ContactData contact = new ContactData()
                     .withId(id).withFirstName(firstName).withLastName(lastName);
-            contacts.add(contact);
+            contactsCache.add(contact);
         }
-        return contacts;
-    }
-
-    public void selectedById(int id) {
-        $("tr[name='entry'] input[value='" + id + "']").click();
+        return contactsCache;
     }
 }
