@@ -8,7 +8,7 @@ import ru.stqa.pft.addressbook.model.Groups;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class GroupDeletionTest extends TestBase{
+public class GroupModificationTests extends TestBase{
 
     @BeforeMethod
     public void ensurePreconditions(){
@@ -20,12 +20,14 @@ public class GroupDeletionTest extends TestBase{
     }
 
     @Test
-    public void testGroupDeletion(){
+    public void testGroupModification(){
         Groups before = app.group().all();
-        GroupData deletedGroup = before.iterator().next();
-        app.group().delete(deletedGroup);
-        assertThat(app.group().count(), equalTo(before.size() - 1));
+        GroupData modifiedGroup = before.iterator().next();
+        GroupData group = new GroupData()
+                .withId(modifiedGroup.getId()).withName("testGroupName").withHeader("testGroupHeader").withFooter("testGroupFooter");
+        app.group().modify(group);
+        assertThat(app.group().count(), equalTo(before.size()));
         Groups after = app.group().all();
-        assertThat(after, equalTo(before.without(deletedGroup)));
+        assertThat(after, equalTo(before.without(modifiedGroup).withAdded(group)));
     }
 }

@@ -8,7 +8,7 @@ import ru.stqa.pft.addressbook.model.Contacts;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class ContactDeletionTest extends TestBase{
+public class ContactDeletionTests extends TestBase{
 
     @BeforeMethod
     public void ensurePreconditions(){
@@ -18,7 +18,7 @@ public class ContactDeletionTest extends TestBase{
                     .withLastName("testLastName")
                     .withAddress("testAddress")
                     .withEmail("testEmail")
-                    .withPhone("testHomePhone"));
+                    .withHomePhone("testHomePhone"));
         }
     }
 

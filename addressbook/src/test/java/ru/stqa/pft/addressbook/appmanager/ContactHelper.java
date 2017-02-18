@@ -12,6 +12,7 @@ import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.navigator;
 
 public class ContactHelper extends BaseHelper{
 
@@ -26,7 +27,11 @@ public class ContactHelper extends BaseHelper{
         fill("input[name='lastname']", contactData.getLastName());
         fill("textarea[name='address']", contactData.getAddress());
         fill("input[name='email']", contactData.getEmail());
+        fill("input[name='email2']", contactData.getEmail2());
+        fill("input[name='email3']", contactData.getEmail3());
         fill("input[name='home']", contactData.getHomePhone());
+        fill("input[name='mobile']", contactData.getMobilePhone());
+        fill("input[name='work']", contactData.getWorkPhone());
 
         if(creation){
             if ($$("select[name='new_group'] option").size()>1){
@@ -102,10 +107,39 @@ public class ContactHelper extends BaseHelper{
             int id = Integer.parseInt(element.$("input").getValue());
             String firstName = element.$("td:nth-of-type(3)").getText();
             String lastName = element.$("td:nth-of-type(2)").getText();
-            ContactData contact = new ContactData()
-                    .withId(id).withFirstName(firstName).withLastName(lastName);
-            contactsCache.add(contact);
+            List<String> emails = element.$$("td:nth-of-type(5) a").texts();
+            String allEmails = "";
+            for(String email : emails){
+                allEmails = allEmails + email;
+            }
+            String allPhones = element.$("td:nth-of-type(6)").getText();
+            contactsCache.add(new ContactData().withId(id).withFirstName(firstName)
+                    .withLastName(lastName).withAllEmails(allEmails).withAllPhones(allPhones));
         }
         return contactsCache;
+    }
+
+    public ContactData infoFromEditFormWithPhones(ContactData contact) {
+        initModificationContactById(contact.getId());
+        String firstName = $(byName("firstname")).getValue();
+        String lastName = $(byName("lastname")).getValue();
+        String home = $(byName("home")).getValue();
+        String mobile = $(byName("mobile")).getValue();
+        String work = $(byName("work")).getValue();
+        navigator.back();
+        return new ContactData().withId(contact.getId()).withFirstName(firstName).withLastName(lastName)
+                .withHomePhone(home).withMobilePhone(mobile).withWorkPhone(work);
+    }
+
+    public ContactData infoFromEditFormWithEmails(ContactData contact) {
+        initModificationContactById(contact.getId());
+        String firstName = $(byName("firstname")).getValue();
+        String lastName = $(byName("lastname")).getValue();
+        String email = $(byName("email")).getValue();
+        String email2 = $(byName("email2")).getValue();
+        String email3 = $(byName("email3")).getValue();
+        navigator.back();
+        return new ContactData().withId(contact.getId()).withFirstName(firstName).withLastName(lastName)
+                .withEmail(email).withEmail2(email2).withEmail3(email3);
     }
 }

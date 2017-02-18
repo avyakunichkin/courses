@@ -6,7 +6,10 @@ public class GroupData {
     private String groupHeader;
     private String groupFooter;
 
-    public int getId() { return id;}
+    public int getId() {
+        System.out.println(id);
+        return id;
+    }
     public String getGroupName() {
         return groupName;
     }
