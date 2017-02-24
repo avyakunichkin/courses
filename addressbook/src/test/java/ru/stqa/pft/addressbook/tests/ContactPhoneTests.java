@@ -21,13 +21,13 @@ public class ContactPhoneTests extends TestBase {
                 .withHomePhone("+7(111)")
                 .withWorkPhone("999 33 33");
         app.contact().create(contact);
-        contact = app.contact().all().iterator().next();
         Contacts contacts = app.contact().all();
-        ContactData contactInfoFromEditForm = app.contact().infoFromEditFormWithPhones(contact.withId(contacts.stream()
+        int maxId = contacts.stream()
                 .mapToInt(ContactData::getId)
                 .max()
-                .getAsInt()));
-        System.out.println("allPhones = " + contact.getAllPhones() + " | mergedPhones = " + mergePhones(contactInfoFromEditForm));
+                .getAsInt();
+        contact = app.contact().getContact(contacts, maxId);
+        ContactData contactInfoFromEditForm = app.contact().infoFromEditFormWithPhones(maxId);
         assertThat(contact.getAllPhones(), equalTo(mergePhones(contactInfoFromEditForm)));
     }
 

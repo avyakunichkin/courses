@@ -10,9 +10,7 @@ import java.util.List;
 
 import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
-import static com.codeborne.selenide.Selenide.navigator;
+import static com.codeborne.selenide.Selenide.*;
 
 public class ContactHelper extends BaseHelper{
 
@@ -97,6 +95,17 @@ public class ContactHelper extends BaseHelper{
         return $$(byName("selected[]")).size();
     }
 
+    public ContactData getContact(Contacts contacts, int id){
+        ContactData lastContact = null;
+        for(ContactData contact : contacts){
+            if (contact.getId() == id){
+                lastContact = contact;
+                break;
+            }
+        }
+        return lastContact;
+    }
+
     public Contacts all() {
         if (contactsCache != null){
             return new Contacts(contactsCache);
@@ -119,27 +128,27 @@ public class ContactHelper extends BaseHelper{
         return contactsCache;
     }
 
-    public ContactData infoFromEditFormWithPhones(ContactData contact) {
-        initModificationContactById(contact.getId());
+    public ContactData infoFromEditFormWithPhones(int id) {
+        initModificationContactById(id);
         String firstName = $(byName("firstname")).getValue();
         String lastName = $(byName("lastname")).getValue();
         String home = $(byName("home")).getValue();
         String mobile = $(byName("mobile")).getValue();
         String work = $(byName("work")).getValue();
         navigator.back();
-        return new ContactData().withId(contact.getId()).withFirstName(firstName).withLastName(lastName)
+        return new ContactData().withId(id).withFirstName(firstName).withLastName(lastName)
                 .withHomePhone(home).withMobilePhone(mobile).withWorkPhone(work);
     }
 
-    public ContactData infoFromEditFormWithEmails(ContactData contact) {
-        initModificationContactById(contact.getId());
+    public ContactData infoFromEditFormWithEmails(int id) {
+        initModificationContactById(id);
         String firstName = $(byName("firstname")).getValue();
         String lastName = $(byName("lastname")).getValue();
         String email = $(byName("email")).getValue();
         String email2 = $(byName("email2")).getValue();
         String email3 = $(byName("email3")).getValue();
         navigator.back();
-        return new ContactData().withId(contact.getId()).withFirstName(firstName).withLastName(lastName)
+        return new ContactData().withId(id).withFirstName(firstName).withLastName(lastName)
                 .withEmail(email).withEmail2(email2).withEmail3(email3);
     }
 }

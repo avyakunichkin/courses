@@ -13,22 +13,22 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ContactEmailTests extends TestBase {
 
     @Test
-    public void testContactPhones() {
+    public void testContactEmails() {
         app.goTo().homePage();
         ContactData contact = new ContactData()
-                .withFirstName("testFirstName")
-                .withLastName("testLastName")
+                .withFirstName("testFirstNameForTestEmail")
+                .withLastName("testLastNameForTestEmail")
                 .withEmail("123")
                 .withEmail2("432")
                 .withEmail3("456@email.com");
         app.contact().create(contact);
-        contact = app.contact().all().iterator().next();
         Contacts contacts = app.contact().all();
-        ContactData contactInfoFromEditForm = app.contact().infoFromEditFormWithEmails(contact.withId(contacts.stream()
+        int maxId = contacts.stream()
                 .mapToInt(ContactData::getId)
                 .max()
-                .getAsInt()));
-        System.out.println("id = " + contact.getId() + " | lastName = " + contact.getLastName() + " | allEmails = " + contact.getAllEmails() + " | mergedEmails = " + mergeEmails(contactInfoFromEditForm));
+                .getAsInt();
+        contact = app.contact().getContact(contacts, maxId);
+        ContactData contactInfoFromEditForm = app.contact().infoFromEditFormWithEmails(maxId);
         assertThat(contact.getAllEmails(), equalTo(mergeEmails(contactInfoFromEditForm)));
     }
 
