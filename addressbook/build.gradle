@@ -7,5 +7,8 @@ repositories {
 dependencies {
     compile 'org.testng:testng:6.10'
     compile 'org.hamcrest:java-hamcrest:2.0.0.0'
+    compile 'com.beust:jcommander:1.58'
+    compile 'com.thoughtworks.xstream:xstream:1.4.9'
+    compile 'com.google.code.gson:gson:2.8.0'
     testCompile 'com.codeborne:selenide:4.3'
 }
