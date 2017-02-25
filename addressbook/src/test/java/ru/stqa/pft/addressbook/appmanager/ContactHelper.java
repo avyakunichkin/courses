@@ -1,7 +1,6 @@
 package ru.stqa.pft.addressbook.appmanager;
 
 import com.codeborne.selenide.SelenideElement;
-import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
 
@@ -30,14 +29,14 @@ public class ContactHelper extends BaseHelper{
         fill("input[name='home']", contactData.getHomePhone());
         fill("input[name='mobile']", contactData.getMobilePhone());
         fill("input[name='work']", contactData.getWorkPhone());
-
+/*
         if(creation){
             if ($$("select[name='new_group'] option").size()>1){
                 $("select[name='new_group']").selectOption(1);
             }
         } else {
             Assert.assertFalse($(byName("new_group")).isDisplayed());
-        }
+        }*/
     }
 
     public void create(ContactData contactData) {
@@ -116,16 +115,24 @@ public class ContactHelper extends BaseHelper{
             int id = Integer.parseInt(element.$("input").getValue());
             String firstName = element.$("td:nth-of-type(3)").getText();
             String lastName = element.$("td:nth-of-type(2)").getText();
-            List<String> emails = element.$$("td:nth-of-type(5) a").texts();
-            String allEmails = "";
-            for(String email : emails){
-                allEmails = allEmails + email;
-            }
             String allPhones = element.$("td:nth-of-type(6)").getText();
-            contactsCache.add(new ContactData().withId(id).withFirstName(firstName)
-                    .withLastName(lastName).withAllEmails(allEmails).withAllPhones(allPhones));
+            contactsCache.add(new ContactData()
+                    .withId(id)
+                    .withFirstName(firstName)
+                    .withLastName(lastName)
+                    .withAllEmails(getAllEmails(element, "td:nth-of-type(5) a"))
+                    .withAllPhones(allPhones));
         }
         return contactsCache;
+    }
+
+    private String getAllEmails(SelenideElement element, String selector) {
+        String allEmails = "";
+        List<String> emails = element.$$(selector).texts();
+        for(String email : emails){
+            allEmails = allEmails + email;
+        }
+        return allEmails;
     }
 
     public ContactData infoFromEditFormWithPhones(int id) {
@@ -150,5 +157,34 @@ public class ContactHelper extends BaseHelper{
         navigator.back();
         return new ContactData().withId(id).withFirstName(firstName).withLastName(lastName)
                 .withEmail(email).withEmail2(email2).withEmail3(email3);
+    }
+
+    public ContactData infoFromEditForm(int id) {
+        initModificationContactById(id);
+        String firstName = $(byName("firstname")).getValue();
+        String lastName = $(byName("lastname")).getValue();
+        String email = $(byName("email")).getValue();
+        String email2 = $(byName("email2")).getValue();
+        String email3 = $(byName("email3")).getValue();
+        String home = $(byName("home")).getValue();
+        String mobile = $(byName("mobile")).getValue();
+        String work = $(byName("work")).getValue();
+        navigator.back();
+        return new ContactData().withId(id).withFirstName(firstName).withLastName(lastName)
+                .withEmail(email).withEmail2(email2).withEmail3(email3)
+                .withHomePhone(home).withMobilePhone(mobile).withWorkPhone(work);
+    }
+
+    public ContactData infoFromViewForm(int id) {
+        initViewContactById(id);
+        String allContact = $("#content").getText();
+        navigator.back();
+        return new ContactData()
+                .withId(id)
+                .withAllContact(allContact);
+    }
+
+    private void initViewContactById(int id) {
+        $("a[href='view.php?id=" + id + "']").click();
     }
 }

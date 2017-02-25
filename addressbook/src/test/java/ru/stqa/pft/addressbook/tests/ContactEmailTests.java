@@ -19,7 +19,6 @@ public class ContactEmailTests extends TestBase {
                 .withFirstName("testFirstNameForTestEmail")
                 .withLastName("testLastNameForTestEmail")
                 .withEmail("123")
-                .withEmail2("432")
                 .withEmail3("456@email.com");
         app.contact().create(contact);
         Contacts contacts = app.contact().all();

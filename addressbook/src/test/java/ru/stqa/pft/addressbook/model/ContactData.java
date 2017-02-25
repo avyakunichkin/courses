@@ -4,6 +4,7 @@ public class ContactData {
     private int id = Integer.MAX_VALUE;
     private String firstName;
     private String lastName;
+    private String allContact;
     private String address;
     private String email;
     private String homePhone;
@@ -143,6 +144,15 @@ public class ContactData {
 
     public ContactData withAllEmails(String allEmail) {
         this.allEmail = allEmail;
+        return this;
+    }
+
+    public String getAllContact() {
+        return allContact;
+    }
+
+    public ContactData withAllContact(String allContact) {
+        this.allContact = allContact;
         return this;
     }
 }
