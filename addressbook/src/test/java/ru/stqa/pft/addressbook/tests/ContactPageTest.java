@@ -22,7 +22,7 @@ public class ContactPageTest extends TestBase{
                 .withEmail("123")
                 .withEmail3("456@email.com");
         app.contact().create(contact);
-        int maxId = app.contact().all().stream()
+        int maxId = app.db().contacts().stream()
                 .mapToInt(ContactData::getId)
                 .max()
                 .getAsInt();

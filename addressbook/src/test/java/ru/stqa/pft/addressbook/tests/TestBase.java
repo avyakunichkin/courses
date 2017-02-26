@@ -9,7 +9,7 @@ import java.io.IOException;
 public class TestBase {
 
     protected static final ApplicationManager app =
-            new ApplicationManager(System.getProperty("browser", "firefox"));
+            new ApplicationManager(System.getProperty("browser", "chrome"));
 
     @BeforeSuite
     public void setUp() throws IOException {

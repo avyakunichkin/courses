@@ -93,7 +93,12 @@ public class ContactDataGenerator {
                     .withLastName("lastName" + i)
                     .withAddress("address" + i)
                     .withEmail("email" + i)
-                    .withHomePhone("homePhone" + i));
+                    .withHomePhone("home" + i)
+                    .withEmail2("email2" + i)
+                    .withEmail3("email3" + i)
+                    .withMobilePhone("mobile" + i)
+                    .withWorkPhone("work" + i)
+            );
         }
         return contacts;
     }
