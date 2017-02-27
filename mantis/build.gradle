@@ -1,0 +1,24 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.testng:testng:6.10'
+    compile 'org.hamcrest:java-hamcrest:2.0.0.0'
+    compile 'org.apache.httpcomponents:httpclient:4.5.3'
+    testCompile 'com.codeborne:selenide:4.3'
+}
+
+test {
+    useTestNG {
+        suites 'src/test/resources/testng-groups.xml'
+    }
+    if (project.hasProperty('browser')){
+        systemProperty 'browser', "${browser}"
+    }
+    if (project.hasProperty('target')){
+        systemProperty 'target', "${target}"
+    }
+}
