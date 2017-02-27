@@ -33,8 +33,8 @@ public class ContactAddToGroupTests extends TestBase {
         app.goTo().homePage();
         ContactData contact = app.contact().all().iterator().next();
         Groups groups = app.db().groups();
-        ContactData before = app.db().contactById(contact.getId());
-        int id = app.contact().getGroupId(before, groups);
+        ContactData contactBefore = app.db().contactById(contact.getId());
+        int id = app.contact().getGroupId(contactBefore, groups);
         if (id == -1) {
             app.group().create(new GroupData()
                     .withName("createGroupForAddContact").withHeader("createGroupForAddContact").withFooter("createGroupForAddContact"));
@@ -46,12 +46,12 @@ public class ContactAddToGroupTests extends TestBase {
             groupId = id;
         }
         System.out.println("Contact id = " + contact.getId() + " | Group id = " + groupId);
-        app.contact().selectContactById(contact.getId())
+        app.contact().selectContact(contact)
                 .addContactToGroup(groupId);
 
         int finalGroupId = groupId;
-        ContactData after = app.db().contactById(contact.getId());
-        long count = after.getGroups().stream().filter((g) -> (g).getId() == finalGroupId).count();
+        ContactData contactAfter = app.db().contactById(contact.getId());
+        long count = contactAfter.getGroups().stream().filter((g) -> (g).getId() == finalGroupId).count();
         assertTrue( "Count = " + count, count > 0);
     }
 }

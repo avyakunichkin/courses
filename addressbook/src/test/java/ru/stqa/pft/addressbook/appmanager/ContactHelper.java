@@ -9,9 +9,7 @@ import ru.stqa.pft.addressbook.model.Groups;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.value;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
@@ -220,6 +218,21 @@ public class ContactHelper extends BaseHelper{
         selectContactById(id);
         $("input[name='remove']").click();
         $(".msgbox").shouldHave(text("Users removed"));
+        return this;
+    }
+
+    public ContactHelper selectContact(ContactData contact) {
+        $("tr[name='entry'] input[value='" + contact.getId() + "']").click();
+        return this;
+    }
+
+    public ContactHelper selectRandomContact(Contacts contacts) {
+        selectContact(contacts.iterator().next());
+        return this;
+    }
+
+    public ContactHelper addContactToRandomGroup(Groups groups) {
+        addContactToGroup(groups.iterator().next().getId());
         return this;
     }
 }

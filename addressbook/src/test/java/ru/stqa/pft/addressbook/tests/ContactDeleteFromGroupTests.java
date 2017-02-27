@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.model.Groups;
 
 import static org.testng.Assert.assertTrue;
 
@@ -30,6 +31,11 @@ public class ContactDeleteFromGroupTests extends TestBase{
     @Test
     public void testContactDeleteFromGroup(){
         app.goTo().homePage();
+        Groups groups = app.db().groups();
+        Contacts contacts = app.db().contacts();
+        if (groups.stream().filter((g) -> g.getContacts().size()>0).count() == 0){
+            app.contact().selectRandomContact(contacts).addContactToRandomGroup(groups);
+        }
         GroupData group = app.db().groups().stream().filter((g) -> g.getContacts().size()>0).iterator().next();
         Contacts before = group.getContacts();
         ContactData contact = group.getContacts().iterator().next();
