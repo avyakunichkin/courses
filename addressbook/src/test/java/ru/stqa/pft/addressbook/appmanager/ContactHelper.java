@@ -3,10 +3,15 @@ package ru.stqa.pft.addressbook.appmanager;
 import com.codeborne.selenide.SelenideElement;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.model.Groups;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.value;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byName;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
@@ -19,29 +24,21 @@ public class ContactHelper extends BaseHelper{
         $("input[name='submit']").click();
     }
 
-    private void fillContactForm(ContactData contactData, boolean creation) {
-        fill("input[name='firstname']", contactData.getFirstName());
-        fill("input[name='lastname']", contactData.getLastName());
-        fill("textarea[name='address']", contactData.getAddress());
-        fill("input[name='email']", contactData.getEmail());
-        fill("input[name='email2']", contactData.getEmail2());
-        fill("input[name='email3']", contactData.getEmail3());
-        fill("input[name='home']", contactData.getHomePhone());
-        fill("input[name='mobile']", contactData.getMobilePhone());
-        fill("input[name='work']", contactData.getWorkPhone());
-/*
-        if(creation){
-            if ($$("select[name='new_group'] option").size()>1){
-                $("select[name='new_group']").selectOption(1);
-            }
-        } else {
-            Assert.assertFalse($(byName("new_group")).isDisplayed());
-        }*/
+    private void fillContactForm(ContactData contact) {
+        fill("input[name='firstname']", contact.getFirstName());
+        fill("input[name='lastname']", contact.getLastName());
+        fill("textarea[name='address']", contact.getAddress());
+        fill("input[name='email']", contact.getEmail());
+        fill("input[name='email2']", contact.getEmail2());
+        fill("input[name='email3']", contact.getEmail3());
+        fill("input[name='home']", contact.getHomePhone());
+        fill("input[name='mobile']", contact.getMobilePhone());
+        fill("input[name='work']", contact.getWorkPhone());
     }
 
-    public void create(ContactData contactData) {
+    public void create(ContactData contact) {
         initContactPage();
-        fillContactForm(contactData, true);
+        fillContactForm(contact);
         submitCreationContact();
         contactsCache = null;
         returnToHomePage();
@@ -49,7 +46,7 @@ public class ContactHelper extends BaseHelper{
 
     public void modify(ContactData contact) {
         initModificationContactById(contact.getId());
-        fillContactForm(contact, false);
+        fillContactForm(contact);
         updateContact();
         contactsCache = null;
         returnToHomePage();
@@ -79,9 +76,13 @@ public class ContactHelper extends BaseHelper{
         $("input[name='update']").click();
     }
     public void delete(int id) {
-        $("tr[name='entry'] input[value='" + id + "']").click();
+        selectContactById(id);
         $("input[value='Delete']").click();
         contactsCache = null;
+    }
+    public ContactHelper selectContactById(int id){
+        $("tr[name='entry'] input[value='" + id + "']").click();
+        return this;
     }
     public boolean isThereAContact() {
         return $("input[name='selected[]']").isDisplayed();
@@ -186,5 +187,39 @@ public class ContactHelper extends BaseHelper{
 
     private void initViewContactById(int id) {
         $("a[href='view.php?id=" + id + "']").click();
+    }
+
+    public int getGroupId(ContactData contact, Groups groups) {
+        int groupId = -1;
+        for (GroupData group : groups){
+            if (contact.getGroups().stream().filter((g) -> (g).getId() == group.getId()).count() == 0){
+                groupId = group.getId();
+                break;
+            }
+        }
+        return groupId;
+    }
+
+    public ContactHelper addContactToGroup(int groupId) {
+        $("select[name='to_group']").click();
+        $(String.format("select[name='to_group'] option[value='%s']", groupId)).click();
+        $("input[name='add']").click();
+        $(String.format("a[href='./?group=%s']", groupId)).shouldBe(visible);
+        return this;
+    }
+
+    public ContactHelper openGroup(GroupData group) {
+        $("select[name='group']").click();
+        $(String.format("select[name='group'] option[value='%s']", group.getId())).click();
+        $("input[name='remove']").shouldBe(visible)
+                .shouldHave(value(String.format("Remove from \"%s\"", group.getGroupName())));
+        return this;
+    }
+
+    public ContactHelper deleteContactFromGroup(int id) {
+        selectContactById(id);
+        $("input[name='remove']").click();
+        $(".msgbox").shouldHave(text("Users removed"));
+        return this;
     }
 }
