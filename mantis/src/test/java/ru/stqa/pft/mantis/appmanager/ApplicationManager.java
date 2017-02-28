@@ -13,8 +13,10 @@ public class ApplicationManager {
 
     private String browser = "";
     private final Properties properties;
-    private RegistrationHelper registrationHelper;
+    private UserHelper userHelper;
     private MailHelper mailHelper;
+    private DbHelper dbHelper;
+    private AdminHelper adminHelper;
 
     public ApplicationManager(String browser){
         this.browser = browser;
@@ -39,11 +41,11 @@ public class ApplicationManager {
         return properties.getProperty(key);
     }
 
-    public RegistrationHelper registration() {
-        if(registrationHelper == null){
-            registrationHelper = new RegistrationHelper(this);
+    public UserHelper user() {
+        if(userHelper == null){
+            userHelper = new UserHelper(this);
         }
-        return registrationHelper;
+        return userHelper;
     }
 
     public MailHelper mail(){
@@ -51,5 +53,19 @@ public class ApplicationManager {
             mailHelper = new MailHelper(this);
         }
         return mailHelper;
+    }
+
+    public DbHelper db(){
+        if(dbHelper == null){
+            dbHelper = new DbHelper();
+        }
+        return dbHelper;
+    }
+
+    public AdminHelper admin(){
+        if(adminHelper == null){
+            adminHelper = new AdminHelper(this);
+        }
+        return adminHelper;
     }
 }
