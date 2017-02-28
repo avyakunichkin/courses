@@ -8,12 +8,13 @@ import java.io.IOException;
 import java.util.Properties;
 
 import static com.codeborne.selenide.Selenide.close;
-import static com.codeborne.selenide.Selenide.open;
 
 public class ApplicationManager {
 
     private String browser = "";
     private final Properties properties;
+    private RegistrationHelper registrationHelper;
+    private MailHelper mailHelper;
 
     public ApplicationManager(String browser){
         this.browser = browser;
@@ -24,7 +25,6 @@ public class ApplicationManager {
         String target = System.getProperty("target", "local");
         properties.load(new FileReader(new File(String.format("src/test/resources/%s.properties", target))));
         Configuration.browser = browser;
-        open(properties.getProperty("web.baseUrl"));
     }
 
     public void stop() {
@@ -37,5 +37,19 @@ public class ApplicationManager {
 
     public String getProperty(String key) {
         return properties.getProperty(key);
+    }
+
+    public RegistrationHelper registration() {
+        if(registrationHelper == null){
+            registrationHelper = new RegistrationHelper(this);
+        }
+        return registrationHelper;
+    }
+
+    public MailHelper mail(){
+        if(mailHelper == null){
+            mailHelper = new MailHelper(this);
+        }
+        return mailHelper;
     }
 }

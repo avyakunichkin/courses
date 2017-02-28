@@ -8,6 +8,8 @@ dependencies {
     compile 'org.testng:testng:6.10'
     compile 'org.hamcrest:java-hamcrest:2.0.0.0'
     compile 'org.apache.httpcomponents:httpclient:4.5.3'
+    compile 'org.subethamail:subethasmtp:3.1.7'
+    compile 'ru.lanwen.verbalregex:java-verbal-expressions:1.4'
     testCompile 'com.codeborne:selenide:4.3'
 }
 
